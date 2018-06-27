@@ -1,0 +1,3 @@
+<!-- canvas.wxml -->
+<canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="firstCanvas" bindtouchstart="touch"></canvas>
+<button bindtap='back'>回退</button>
