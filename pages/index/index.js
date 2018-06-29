@@ -7,8 +7,8 @@ Page({
     tempFilePaths: '',
     disabled:false,
   },
-  onLoad: function () {
-    
+  onLoad: function (options) {
+    console.log(options.plateNumber);
   },
 
   /**
