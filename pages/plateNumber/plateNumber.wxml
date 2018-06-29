@@ -1,0 +1,18 @@
+<i-notice-bar icon="systemprompt" closable>
+    步骤1: 请输入正确的车牌号
+</i-notice-bar>
+<view class="view1">
+  <view class="weui-cells__title">车牌号</view>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__bd">
+          <input class="weui-input" name="plateNumber" bindinput='inputValue' placeholder="请在此输入车牌号" />
+      </view>
+    </view>
+  </view>
+
+  <view class="button-sp-area">
+      <button class="weui-btn mini-btn" type="primary" size="mini" bindtap='sureClick'>确定</button>
+  </view>
+
+</view>

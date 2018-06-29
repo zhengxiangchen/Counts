@@ -1,0 +1,11 @@
+.view1{
+  width: 50%; 
+  height: 100%; 
+  overflow: auto; 
+  margin: 20% auto; 
+}
+.button-sp-area{
+    margin: 0 40%;
+    padding-top: 15px;
+    width: 60%;
+}

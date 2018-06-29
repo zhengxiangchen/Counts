@@ -1,5 +1,6 @@
 {
   "pages":[
+    "pages/plateNumber/plateNumber",
     "pages/index/index",
     "pages/authorize/authorize",
     "pages/my/my",
@@ -17,7 +18,7 @@
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/plateNumber/plateNumber",
         "text": "首页",
         "iconPath": "images/index.png",
         "selectedIconPath": "images/index_check.png"
