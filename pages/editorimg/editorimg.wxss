@@ -1,0 +1,9 @@
+.button-sp-area{
+    display: flex;
+    flex-direction:row;
+    justify-content:space-around;
+    margin-top: 50rpx;
+}
+.mini-btn{
+    margin: auto;
+}

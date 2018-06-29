@@ -1,0 +1,17 @@
+<i-notice-bar icon="systemprompt" closable>
+    选取识别区域--默认区域大小为50
+</i-notice-bar>
+<canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="firstCanvas" bindtouchstart="touch"></canvas>
+<view class="page">
+    <view class="page__bd page__bd_spacing">
+        <block wx:if="{{show}}">
+          <slider show-value value="50" bindchange="changeRadius"/>
+        </block>
+        <view class="button-sp-area">
+          <button class="weui-btn mini-btn" type="primary" size="mini" bindtap='showRadius'>大小</button>
+          <button class="weui-btn mini-btn" type="default" size="mini" bindtap='back'>回退</button>
+          <button class="weui-btn mini-btn" type="warn" size="mini">橡皮擦</button>
+        </view>
+         <button class="weui-btn" type="primary" plain="true" bindtap='save'>保存</button>
+    </view>
+</view>

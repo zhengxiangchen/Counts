@@ -1,9 +1,11 @@
 {
   "pages":[
+    "pages/chooseimg/chooseimg",
     "pages/index/index",
     "pages/authorize/authorize",
     "pages/my/my",
-    "pages/counts/counts"
+    "pages/counts/counts",
+    "pages/editorimg/editorimg"
   ],
   "window":{
     "backgroundTextStyle":"light",
