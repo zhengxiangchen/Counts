@@ -14,10 +14,14 @@ Page({
     imageheight: 0,//缩放后的高
     defaultRadius:50,//默认半径大小
     show:false,//是否显示调节大小的控件
+    isEraser:false,//是否启用橡皮擦
 
     circularList:[],//所有圆圈的集合
     circular:{},//圆的对象(圆心X坐标,圆心Y坐标,对应半径)
-    img:{},//存选完区域后整个图片对象(包括src,圆对象的集合)
+    img:{},//存选完区域后整个图片对象(包含属性:src,圆对象的集合)
+
+    backActionList:[],//用于记录点击回退按钮后应该执行的操作对象
+    backAction:{},//回退操作对象(包含属性:action[添加0|删除1],圆对象)
   },
 
   /**
@@ -125,23 +129,64 @@ Page({
       context.arc(circular.x, circular.y, circular.radius, 0, 2 * Math.PI);
       context.stroke();
     }
-
     context.draw();
   },
 
   //手指触摸动作开始
   touch: function (e) {
     var that = this;
-    var radius = that.data.defaultRadius;
-    //组装一个圆对象
-    var circular = {};
-    circular.x = e.changedTouches[0].x;
-    circular.y = e.changedTouches[0].y;
-    circular.radius = radius;
-    //把圆对象放入集合中
-    that.data.circularList.push(circular);
+    var isEraser = that.data.isEraser;
+    if (isEraser){
+      //已经启用橡皮擦,点击--去除圆心相近的已有圆
+      console.log("已经启用橡皮擦");
+      console.log(that.data.circularList);
+      var circularList = that.data.circularList;
+      var pointX = e.changedTouches[0].x;
+      var pointY = e.changedTouches[0].y;
+      if (circularList.length <= 0){
+        console.log("啥都不用做");
+        return;
+      }else{
+        for (var i = 0; i < circularList.length; i++){
+          var circular = circularList[i];
+          var circularX = circular.x;
+          var circularY = circular.y;
+          var radius = circular.radius;
+          //计算圆心与橡皮擦点的距离
+          var distance = Math.sqrt(Math.pow((pointX - circularX), 2) + Math.pow((pointY - circularY),2));
+          if (distance <= radius){
+            //橡皮擦的点在某个圆内,去掉这个圆,重新调用画图函数
+            console.log("橡皮擦的点在某个圆内,去掉这个圆");
+            that.data.circularList.splice(i, 1);
+            that.drawCircular(that.data.circularList);
 
-    that.drawCircular(that.data.circularList);
+            //记录回退操作
+            var backAction = {};
+            backAction.action = 0;
+            backAction.circular = circular;
+            that.data.backActionList.push(backAction);
+          }
+        }
+      }
+    }else{
+      //未启用橡皮擦,点击--画区域
+      var radius = that.data.defaultRadius;
+      //组装一个圆对象
+      var circular = {};
+      circular.x = e.changedTouches[0].x;
+      circular.y = e.changedTouches[0].y;
+      circular.radius = radius;
+      //把圆对象放入集合中
+      that.data.circularList.push(circular);
+
+      that.drawCircular(that.data.circularList);
+
+      //记录回退操作
+      var backAction = {};
+      backAction.action = 1;
+      backAction.circular = circular;
+      that.data.backActionList.push(backAction);
+    }
   },
 
   //点击大小按钮,展示滑块控件
@@ -183,6 +228,36 @@ Page({
     }
   },
 
+  //点击回退按钮
+  back1: function () {
+    var that = this;
+    var backActionList = that.data.backActionList;
+    if (backActionList.length <= 0) {
+      return;
+    } else {
+      var backAction = backActionList.pop();
+      var action = backAction.action;
+      var circular = backAction.circular;
+      //如果action为0添加一个圆
+      if (action == 0){
+        that.data.circularList.push(circular);
+      }
+      //如果action为1删除一个圆
+      if (action == 1) {
+        var circularList = that.data.circularList;
+        for (var i = 0; i < circularList.length; i++) {
+          var circularobj = circularList[i];
+          var circularX = circularobj.x;
+          var circularY = circularobj.y;
+          if (circular.x == circularX && circular.y == circularY){
+            that.data.circularList.splice(i, 1);
+          }
+        }
+      }
+      that.drawCircular(that.data.circularList);
+    }
+  },
+
   //点击保存按钮
   save:function(){
     var that = this;
@@ -198,5 +273,20 @@ Page({
     wx.navigateBack({
       delta: 1,
     })
+  },
+
+  //点击橡皮擦按钮
+  changeEraser:function(){
+    var that = this;
+    var isEraser = that.data.isEraser;
+    if (isEraser){
+      that.setData({
+        isEraser:false
+      })
+    }else{
+      that.setData({
+        isEraser: true
+      })
+    }
   }
 })

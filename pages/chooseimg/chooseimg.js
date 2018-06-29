@@ -36,6 +36,8 @@ Page({
         //只有当图片信息中存在区域圆的时候编辑标记才改为true
         if (img.circularList.length > 0){
           img.isEditor = true;
+        }else{
+          img.isEditor = false;
         }
       }
     }
@@ -121,13 +123,23 @@ Page({
   //点击上传图片按钮
   uploadimgs:function(){
     var that = this;
-    var listLength = that.data.files.length;
-    if (listLength <= 0){
+    var list = that.data.files;
+    if (list.length <= 0){
       $Message({
         content: '请选择图片',
-        type: 'warning',
         duration: 3
       });
+    }else{
+      for (var i = 0; i < list.length; i++){
+        var img = list[i];
+        if (!img.isEditor || img.isEditor == undefined){
+          $Message({
+            content: '有图片未编辑',
+            type: 'warning',
+            duration: 3
+          });
+        }
+      }
     }
   },
 

@@ -71,7 +71,7 @@ Page({
   sureClick: function(e){
     console.log(this.data.plateNumber);
     wx.navigateTo({
-      url: '../index/index?plateNumber=' + this.data.plateNumber
+      url: '/pages/chooseimg/chooseimg?plateNumber=' + this.data.plateNumber
     })
   }
 })

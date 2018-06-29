@@ -1,7 +1,7 @@
 {
   "pages":[
-    "pages/chooseimg/chooseimg",
     "pages/plateNumber/plateNumber",
+    "pages/chooseimg/chooseimg",
     "pages/index/index",
     "pages/authorize/authorize",
     "pages/my/my",
@@ -14,23 +14,5 @@
     "navigationBarTitleText": "Counts",
     "navigationBarTextStyle":"black",
     "backgroundColor": "#BFBFBF"
-  },
-  "tabBar": {
-    "color": "#a9b7b7",
-    "borderStyle": "white",
-    "list": [
-      {
-        "pagePath": "pages/plateNumber/plateNumber",
-        "text": "首页",
-        "iconPath": "images/index.png",
-        "selectedIconPath": "images/index_check.png"
-      },
-      {
-        "pagePath": "pages/my/my",
-        "text": "我的",
-        "iconPath": "images/my.png",
-        "selectedIconPath": "images/my_check.png"
-      }
-    ]
   }
 }

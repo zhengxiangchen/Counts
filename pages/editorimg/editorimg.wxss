@@ -1,9 +1,19 @@
 .button-sp-area{
     display: flex;
     flex-direction:row;
-    justify-content:space-around;
+    justify-content:space-between;
     margin-top: 50rpx;
+}
+.text-sp-area{
+  display: flex;
+  flex-direction:row;
+  justify-content:space-between;
+  margin-top: 5rpx;
 }
 .mini-btn{
     margin: auto;
+}
+
+.switch{
+  margin: auto;
 }

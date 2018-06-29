@@ -1,3 +1,6 @@
+<i-notice-bar icon="systemprompt" closable>
+  步骤2: 请上传需要计数的图片,并圈出计数区域
+</i-notice-bar>
 <view class="page">
     <view class="page__hd">
         <view class="page__title">图片上传</view>
