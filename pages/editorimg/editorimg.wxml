@@ -1,7 +1,8 @@
 <i-notice-bar icon="systemprompt" closable>
     选取识别区域--默认区域大小为50
 </i-notice-bar>
-<canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="firstCanvas" bindtouchstart="touch"></canvas>
+<canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="firstCanvas" bindtouchend="touch" 
+bindtouchmove='move'></canvas>
 <view class="page">
     <view class="page__bd page__bd_spacing">
         <block wx:if="{{show}}">

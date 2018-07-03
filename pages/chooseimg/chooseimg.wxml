@@ -49,7 +49,7 @@
             </view>
         </view>
         <view class="page__bd page__bd_spacing">
-          <button class="weui-btn" type="primary" style='margin-top:120rpx;' bindtap='uploadimgs'>上传图片</button>
+          <button class="weui-btn" type="primary" style='margin-top:120rpx;' bindtap='uploadimgs' disabled='{{disabled}}'>上传图片</button>
         </view>
     </view>
 </view>

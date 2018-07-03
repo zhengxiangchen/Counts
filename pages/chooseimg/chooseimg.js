@@ -7,7 +7,8 @@ Page({
    */
   data: {
     files: [],
-    img:{}
+    img:{},
+    disabled:false
   },
 
   /**
@@ -138,6 +139,21 @@ Page({
             type: 'warning',
             duration: 3
           });
+        }else{
+          that.setData({
+            disabled:true
+          })
+
+          wx.showLoading({
+            title: '正在计数',
+          })
+
+          setTimeout(function () {
+            wx.hideLoading();
+            that.setData({
+              disabled: false
+            })
+          }, 3500);
         }
       }
     }
