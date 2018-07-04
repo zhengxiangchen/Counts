@@ -1,12 +1,12 @@
 <i-notice-bar icon="systemprompt" closable>
-    步骤1: 请输入正确的车牌号
+    步骤1: 请输入正确的批次号
 </i-notice-bar>
 <view class="view1">
-  <view class="weui-cells__title">车牌号</view>
+  <view class="weui-cells__title">批次号</view>
   <view class="weui-cells weui-cells_after-title">
     <view class="weui-cell weui-cell_input">
       <view class="weui-cell__bd">
-          <input class="weui-input" name="plateNumber" bindinput='inputValue' placeholder="请在此输入车牌号" />
+          <input class="weui-input" name="plateNumber" bindinput='inputValue' placeholder="请在此输入批次号" />
       </view>
     </view>
   </view>
@@ -16,3 +16,9 @@
   </view>
 
 </view>
+
+<i-modal title="重复批次" visible="{{ visible }}" actions="{{ actions }}" bind:click="handleClick">
+    <view>该批次您已上传,是否需要删除记录</view>
+</i-modal>
+
+<i-message id="message" />

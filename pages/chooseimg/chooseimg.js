@@ -1,5 +1,6 @@
 // pages/chooseimg/chooseimg.js
 const { $Message } = require('../../dist/base/index');
+var app = getApp();
 Page({
 
   /**
@@ -139,23 +140,23 @@ Page({
             type: 'warning',
             duration: 3
           });
-        }else{
-          that.setData({
-            disabled:true
-          })
-
-          wx.showLoading({
-            title: '正在计数',
-          })
-
-          setTimeout(function () {
-            wx.hideLoading();
-            that.setData({
-              disabled: false
-            })
-          }, 3500);
+          return;
         }
       }
+
+      console.log(that.data.files);
+      var files = that.data.files;
+      var openId = wx.getStorageSync("openId");
+      var plateNumber = app.globalData.plateNumber;
+
+      that.setData({
+        disabled: true
+      })
+
+      wx.showLoading({
+        title: '正在计数',
+      })
+      that.uploadDIY(files, 0, files.length, openId, plateNumber);
     }
   },
 
@@ -192,6 +193,49 @@ Page({
         }
       }
     });
+  },
 
-  }
+  //递归方式上传多张图片(含有图片src以及区域xy轴信息的数组，计数器i，数组总长度)
+  uploadDIY(files, i, length, openId, plateNumber) {
+    wx.uploadFile({
+      url: 'http://127.0.0.1:8080/api_v1/mini/picture/upload',
+      filePath: files[i].src,
+      name: 'picture',
+      formData: {
+        'openId': openId,
+        'plateNumber': plateNumber,
+        'circularList': JSON.stringify(files[i].circularList)
+        
+      },
+      complete: (res) => {
+        i++;
+        if (i == length) {
+          var status = res.data;
+          console.log(status);
+          if (status == 'success'){
+            console.log("图片全部上传服务器");
+            wx.hideLoading();
+            this.setData({
+              disabled: false
+            })
+            wx.redirectTo({
+              url: '/pages/countslist/countslist',
+            })
+          }else{
+            wx.showToast({
+              icon: 'none',
+              title: '上传失败,服务器故障',
+            })
+            this.setData({
+              disabled: false
+            })
+          }
+        }
+        else {  //递归调用uploadDIY函数
+          this.uploadDIY(files, i, length, openId, plateNumber);
+        }
+      },
+    });
+  },
+
 })

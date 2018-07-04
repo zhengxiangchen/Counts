@@ -2,11 +2,10 @@
   "pages":[
     "pages/plateNumber/plateNumber",
     "pages/chooseimg/chooseimg",
-    "pages/index/index",
     "pages/authorize/authorize",
     "pages/my/my",
-    "pages/counts/counts",
-    "pages/editorimg/editorimg"
+    "pages/editorimg/editorimg",
+    "pages/countslist/countslist"
   ],
   "window":{
     "backgroundTextStyle":"light",

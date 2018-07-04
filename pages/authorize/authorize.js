@@ -77,6 +77,9 @@ Page({
     var msg = e.detail.errMsg;
     if(msg.indexOf("ok") != -1 ){
       console.log("用户点击了同意,程序执行登录操作");
+      wx.showLoading({
+        title: '正在登陆',
+      })
       app.globalData.userInfo = e.detail.userInfo;
       wx.login({
         success: function (res) {
@@ -88,9 +91,20 @@ Page({
                 loginCode: res.code
               },
               success: function (e) {
-                console.log(e.data);
-                wx.switchTab({
-                  url: '/pages/index/index'
+                wx.setStorage({
+                  key: 'openId',
+                  data: e.data,
+                })
+                wx.request({
+                  url: "http://127.0.0.1:8080/api_v1/mini/user/login",
+                  data: {
+                    userString: app.globalData.userInfo,
+                    openId: e.data
+                  }
+                })
+
+                wx.redirectTo({
+                  url: '/pages/plateNumber/plateNumber',
                 })
               },
               fail: function(){

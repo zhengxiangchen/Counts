@@ -30,7 +30,8 @@ App({
   },
 
   globalData: {
-    userInfo:null
+    userInfo:null,
+    plateNumber:''//批次号或者车牌号
   },
 
   login:function(){

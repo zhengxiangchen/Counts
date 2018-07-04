@@ -1,0 +1,19 @@
+<view class="page">
+    <view class="page__hd">
+        <view class="page__title">计数结果:{{allCount}}</view>
+        <view class="page__desc">提示:点击图片可进行查看和调试</view>
+    </view>
+    <view class="page__bd">
+        <view class="weui-grids">
+            <block wx:for="{{pictures}}" wx:key="{{item.id}}">
+                <navigator url="" class="weui-grid" hover-class="weui-grid_active">
+                    <image class="weui-grid__icon" style='width:95px; height:95px;' src="{{item.pictureSrc}}" />
+                    <view class="weui-grid__label">图片计数：{{item.signCount}}</view>
+                </navigator>
+            </block>
+        </view>
+    </view>
+    <view class="page__bd page__bd_spacing">
+      <button class="weui-btn" type="primary" style='margin-top:120rpx;' bindtap='back'>返回</button>
+    </view>
+</view>
