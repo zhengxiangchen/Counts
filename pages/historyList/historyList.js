@@ -1,4 +1,4 @@
-// pages/countslist/countslist.js
+// pages/historyList/historyList.js
 var app = getApp();
 var staticUrl = app.globalData.staticUrl;
 Page({
@@ -8,7 +8,7 @@ Page({
    */
   data: {
     pictures: [],
-    allCount:0
+    allCount: 0
   },
 
   /**
@@ -16,8 +16,12 @@ Page({
    */
   onLoad: function (options) {
     var that = this;
+    wx.setStorage({
+      key: 'isHistory',
+      data: true,
+    })
     var openId = wx.getStorageSync("openId");
-    var plateNumber = app.globalData.plateNumber;
+    var plateNumber = options.plateNumber;
     wx.request({
       url: staticUrl + '/picture/getPictures',
       data: {
@@ -26,7 +30,7 @@ Page({
       },
       success: function (res) {
         that.setData({
-          pictures:res.data
+          pictures: res.data
         })
 
         var count = 0;
@@ -41,18 +45,16 @@ Page({
       fail: function () {
         wx.showToast({
           icon: 'none',
-          title: '加载计数后图片失败',
+          title: '历史界面进入图片列表失败',
         })
       }
     })
-  
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    
   
   },
 
@@ -98,11 +100,11 @@ Page({
   
   },
 
+
   //点击返回按钮
-  back:function(){
+  back: function () {
     wx.switchTab({
       url: '/pages/index/index',
     })
   }
-
 })

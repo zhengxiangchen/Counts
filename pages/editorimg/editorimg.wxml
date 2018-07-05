@@ -10,7 +10,7 @@ bindtouchmove='move'></canvas>
         </block>
         <view class="button-sp-area">
           <button class="weui-btn mini-btn" type="primary" size="mini" bindtap='showRadius'>大小</button>
-          <button class="weui-btn mini-btn" type="default" size="mini" bindtap='back1'>回退</button>
+          <button class="weui-btn mini-btn" type="default" size="mini" bindtap='back'>回退</button>
           <i-switch value="{{isEraser}}" size="large" bind:change="changeEraser" slot="footer" class='weui-btn mini-btn'>
             <view slot="open">橡皮</view>
             <view slot="close">橡皮</view>

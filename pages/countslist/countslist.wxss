@@ -1,1 +1,3 @@
-/* pages/countslist/countslist.wxss */
+page {
+  background: white;
+}

@@ -18,8 +18,8 @@
 .userinfo-avatar {  
   overflow:hidden;  
   display: block;  
-  width: 200rpx;  
-  height: 200rpx;  
+  width: 170rpx;  
+  height: 170rpx;  
   margin: 20rpx;  
   margin-top: 50rpx;  
   border-radius: 50%;
@@ -27,13 +27,6 @@
 
 .userinfo-nickname {
   color: #aaa;
-}
-
-.line{
-    margin-top: 40rpx;
-    height: 36rpx;
-    width:100%;
-    background-color: #F8F9FA;
 }
 
 
@@ -93,4 +86,11 @@
 .work-eye {
     width: 28px;
     height: 28px;
+}
+
+
+.demo-container{
+	width:50vw;
+	height: 100vh;
+	background:#F8F8F8;
 }

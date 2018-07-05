@@ -1,6 +1,7 @@
 // pages/chooseimg/chooseimg.js
 const { $Message } = require('../../dist/base/index');
 var app = getApp();
+var staticUrl = app.globalData.staticUrl;
 Page({
 
   /**
@@ -198,7 +199,7 @@ Page({
   //递归方式上传多张图片(含有图片src以及区域xy轴信息的数组，计数器i，数组总长度)
   uploadDIY(files, i, length, openId, plateNumber) {
     wx.uploadFile({
-      url: 'http://127.0.0.1:8080/api_v1/mini/picture/upload',
+      url: staticUrl + '/picture/upload',
       filePath: files[i].src,
       name: 'picture',
       formData: {

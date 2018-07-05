@@ -1,11 +1,14 @@
 {
   "pages":[
+    "pages/index/index",
     "pages/plateNumber/plateNumber",
     "pages/chooseimg/chooseimg",
     "pages/authorize/authorize",
     "pages/my/my",
     "pages/editorimg/editorimg",
-    "pages/countslist/countslist"
+    "pages/countslist/countslist",
+    "pages/editorsign/editorsign",
+    "pages/historyList/historyList"
   ],
   "window":{
     "backgroundTextStyle":"light",
@@ -13,5 +16,23 @@
     "navigationBarTitleText": "Counts",
     "navigationBarTextStyle":"black",
     "backgroundColor": "#BFBFBF"
+  },
+  "tabBar": {
+    "color": "#a9b7b7",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "计数",
+        "iconPath": "images/index.png",
+        "selectedIconPath": "images/index_check.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "images/my.png",
+        "selectedIconPath": "images/my_check.png"
+      }
+    ]
   }
 }

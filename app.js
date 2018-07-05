@@ -30,6 +30,7 @@ App({
   },
 
   globalData: {
+    staticUrl:'http://192.168.1.205:8080/api_v1/mini',
     userInfo:null,
     plateNumber:''//批次号或者车牌号
   },
@@ -39,8 +40,8 @@ App({
       success: function () {
         //session_key 未过期，并且在本生命周期一直有效
         console.log("没有过期");
-        wx.redirectTo({
-          url: '/pages/plateNumber/plateNumber',
+        wx.switchTab({
+          url: '/pages/index/index',
         })
       },
       fail: function () {

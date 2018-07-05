@@ -1,6 +1,8 @@
 // pages/editorimg/editorimg.js
 var imageUtil = require('../../utils/util.js');
 var context;
+var app = getApp();
+var staticUrl = app.globalData.staticUrl;
 Page({
 
   /**
@@ -12,17 +14,22 @@ Page({
     befheight: 0,//原始图片的高
     imagewidth: 0,//缩放后的宽  
     imageheight: 0,//缩放后的高
-    defaultRadius:50,//默认半径大小
-    show:false,//是否显示调节大小的控件
-    isEraser:false,//是否启用橡皮擦
-    isMove:false,//手指触摸以后是否移动(移动则不画圈)
+    defaultRadius: 50,//默认半径大小
+    show: false,//是否显示调节大小的控件
+    isEraser: false,//是否启用橡皮擦
+    isMove: false,//手指触摸以后是否移动(移动则不画圈)
 
-    circularList:[],//所有圆圈的集合
-    circular:{},//圆的对象(圆心X坐标,圆心Y坐标,对应半径)
-    img:{},//存选完区域后整个图片对象(包含属性:src,圆对象的集合)
+    circularList: [],//所有圆圈的集合
+    circular: {},//圆的对象(圆心X坐标,圆心Y坐标,对应半径)
+    img: {},//存选完区域后整个图片对象(包含属性:src,圆对象的集合)
 
-    backActionList:[],//用于记录点击回退按钮后应该执行的操作对象
-    backAction:{},//回退操作对象(包含属性:action[添加0|删除1],圆对象)
+    backActionList: [],//用于记录点击回退按钮后应该执行的操作对象
+    backAction: {},//回退操作对象(包含属性:action[添加0|删除1],圆对象)
+
+    noticeText: '选取识别区域--默认区域大小为50',//通告栏内容
+    counts:0,//图片中标记的数量
+
+    isHistory:false,//是否从历史页面跳转过来(是则隐藏那些修改按钮)
   },
 
   /**
@@ -30,18 +37,82 @@ Page({
    */
   onLoad: function (options) {
     var that = this;
-    var img = JSON.parse(options.imgToStr);
-    that.setData({
-      tempFilePath: img.src,
-      img: img
+
+    var isHistory = wx.getStorageSync("isHistory");
+    if (isHistory){
+      that.setData({
+        isHistory: isHistory
+      })
+    }
+
+    var pictureId = options.id;
+    wx.request({
+      url: staticUrl + '/picture/getPicture',
+      data: {
+        id: pictureId
+      },
+      success: function (res) {
+        var img = res.data;
+        that.setData({
+          tempFilePath: img.src,
+          img: img
+        })
+        that.initialization();
+      }
     })
-    
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+
+  },
+
+  //界面初始化:绘制原始图片+区域圆或识别标记圆
+  initialization: function () {
     var that = this;
     wx.getImageInfo({
       src: that.data.tempFilePath,
@@ -61,8 +132,11 @@ Page({
         //如果img中含有圆对象,再画圆
         var img = that.data.img;
         var list = img.circularList;
+        that.setData({
+          counts: list.length
+        })
         if (list != undefined && list.length > 0) {
-          context.setStrokeStyle('red');
+          context.setStrokeStyle('green');
           for (var i = 0; i < list.length; i++) {
             var circular = list[i];
             that.data.circularList.push(circular);
@@ -74,58 +148,16 @@ Page({
         context.draw();
       }
     })
-  
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
-  },
 
   //根据传过来的圆的列表画出所有的圆
-  drawCircular:function(list){
+  drawCircular: function (list) {
     var that = this;
     context.clearRect(0, 0, that.data.imagewidth, that.data.imageheight);
     context.drawImage(that.data.tempFilePath, 0, 0, that.data.imagewidth, that.data.imageheight);
-    context.setStrokeStyle('red');
-    for (var i = 0; i < list.length; i++){
+    context.setStrokeStyle('green');
+    for (var i = 0; i < list.length; i++) {
       var circular = list[i];
       context.beginPath();
       context.arc(circular.x, circular.y, circular.radius, 0, 2 * Math.PI);
@@ -135,9 +167,9 @@ Page({
   },
 
   //手指触摸后移动
-  move:function(){
+  move: function () {
     this.setData({
-      isMove:true
+      isMove: true
     })
   },
 
@@ -145,17 +177,16 @@ Page({
   touch: function (e) {
     var that = this;
     var isMove = that.data.isMove;
-    if (isMove){
+    if (isMove) {
       that.setData({
-        isMove:false
+        isMove: false
       })
       return;
-    }else{
+    } else {
       var isEraser = that.data.isEraser;
       if (isEraser) {
         //已经启用橡皮擦,点击--去除圆心相近的已有圆
         console.log("已经启用橡皮擦");
-        console.log(that.data.circularList);
         var circularList = that.data.circularList;
         var pointX = e.changedTouches[0].x;
         var pointY = e.changedTouches[0].y;
@@ -175,6 +206,10 @@ Page({
               console.log("橡皮擦的点在某个圆内,去掉这个圆");
               that.data.circularList.splice(i, 1);
               that.drawCircular(that.data.circularList);
+
+              that.setData({
+                counts: that.data.circularList.length
+              })
 
               //记录回退操作
               var backAction = {};
@@ -197,6 +232,10 @@ Page({
 
         that.drawCircular(that.data.circularList);
 
+        that.setData({
+          counts: that.data.circularList.length
+        })
+
         //记录回退操作
         var backAction = {};
         backAction.action = 1;
@@ -204,18 +243,18 @@ Page({
         that.data.backActionList.push(backAction);
       }
 
-    }  
+    }
   },
 
   //点击大小按钮,展示滑块控件
-  showRadius:function(){
+  showRadius: function () {
     var that = this;
     var isShow = that.data.show;
-    if(isShow){
+    if (isShow) {
       that.setData({
         show: false
       })
-    }else{
+    } else {
       that.setData({
         show: true
       })
@@ -223,7 +262,7 @@ Page({
   },
 
   //滑动滑块得到当前的半径
-  changeRadius:function(e){
+  changeRadius: function (e) {
     var that = this;
     var newRadius = e.detail.value;
     that.setData({
@@ -242,7 +281,7 @@ Page({
       var action = backAction.action;
       var circular = backAction.circular;
       //如果action为0添加一个圆
-      if (action == 0){
+      if (action == 0) {
         that.data.circularList.push(circular);
       }
       //如果action为1删除一个圆
@@ -252,42 +291,52 @@ Page({
           var circularobj = circularList[i];
           var circularX = circularobj.x;
           var circularY = circularobj.y;
-          if (circular.x == circularX && circular.y == circularY){
+          if (circular.x == circularX && circular.y == circularY) {
             that.data.circularList.splice(i, 1);
           }
         }
       }
       that.drawCircular(that.data.circularList);
+
+      that.setData({
+        counts: that.data.circularList.length
+      })
     }
   },
 
-  //点击保存按钮
-  save:function(){
+  //点击保存按钮,将修改后的图片信息传到后台保存数据库
+  //跳转到九宫格重新计数展示
+  save: function () {
     var that = this;
-    that.data.img.src = that.data.tempFilePath;
     that.data.img.circularList = that.data.circularList;
-
-    let pages = getCurrentPages();//获取pages（pages就是获取的当前页面的JS里面所有pages的信息）
-    let prevPage = pages[pages.length - 2];//上一页面（prevPage 就是获取的上一个页面的JS里面所有pages的信息）
-    prevPage.setData({
-      img: that.data.img,
+    wx.request({
+      url: staticUrl + '/picture/updatePicture',
+      data:{
+        pictureInfo: JSON.stringify(that.data.img)
+      },
+      success:function(){
+        wx.reLaunch({
+          url: '/pages/countslist/countslist',
+        })
+      },
+      fail:function(){
+        wx.showToast({
+          icon:'none',
+          title: '修正标记失败',
+        })
+      }
     })
-    wx.navigateBack({
-      delta: 1,
-    })
-
-    
   },
 
   //点击橡皮擦按钮
-  changeEraser:function(){
+  changeEraser: function () {
     var that = this;
     var isEraser = that.data.isEraser;
-    if (isEraser){
+    if (isEraser) {
       that.setData({
-        isEraser:false
+        isEraser: false
       })
-    }else{
+    } else {
       that.setData({
         isEraser: true
       })

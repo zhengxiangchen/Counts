@@ -6,14 +6,32 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    showDot:false,
+    plateList:[],//批次号列表
+    showLeft:false,//是否打开左侧抽屉
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    
+    var that = this;
+    var staticUrl = app.globalData.staticUrl;
+    var openId = wx.getStorageSync("openId");
+
+    wx.request({
+      url: staticUrl + '/user/getPlateList',
+      data: {
+        openId: openId
+      },
+      success: function (res) {
+        var plateList = res.data;
+        wx.setStorage({
+          key: 'plate_count',
+          data: plateList.length,
+        })
+      }
+    })
   },
 
   /**
@@ -27,6 +45,28 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    var that = this;
+    var staticUrl = app.globalData.staticUrl;
+    var openId = wx.getStorageSync("openId");
+    var plate_count = wx.getStorageSync("plate_count");
+    wx.request({
+      url: staticUrl + '/user/getPlateList',
+      data:{
+        openId: openId
+      },
+      success:function(res){
+        var plateList = res.data;
+        that.setData({
+          plateList: plateList
+        })
+        if (plateList.length > plate_count){
+          console.log("之前有进行图片计数操作");
+          that.setData({
+            showDot: true
+          })
+        }
+      }
+    })
     
   },
 
@@ -34,7 +74,9 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+    this.setData({
+      showLeft: false
+    })
   },
 
   /**
@@ -63,6 +105,30 @@ Page({
    */
   onShareAppMessage: function () {
     
+  },
+
+
+  //点击历史记录
+  toHistory:function(){
+    var that = this;
+    wx.setStorage({
+      key: 'plate_count',
+      data: that.data.plateList.length,
+    })
+    that.setData({
+      showDot:false,
+      showLeft: !that.data.showLeft
+    })
+  },
+
+
+
+  //点击某批次号,显示该批次的计数图片
+  showCounts:function(e){
+    var plateNumber = e.currentTarget.id;
+    wx.navigateTo({
+      url: '/pages/historyList/historyList?plateNumber=' + plateNumber,
+    })
   }
 
 })

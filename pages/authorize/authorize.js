@@ -1,5 +1,6 @@
 // pages/superindex/superindex.js
 var app = getApp();
+var staticUrl = app.globalData.staticUrl;
 Page({
 
   /**
@@ -86,7 +87,7 @@ Page({
           if (res.code) {
             //发起网络请求
             wx.request({
-              url: 'http://127.0.0.1:8080/api_v1/mini/user/receiveCode',
+              url: staticUrl + '/user/receiveCode',
               data: {
                 loginCode: res.code
               },
@@ -96,7 +97,7 @@ Page({
                   data: e.data,
                 })
                 wx.request({
-                  url: "http://127.0.0.1:8080/api_v1/mini/user/login",
+                  url: staticUrl + "/user/login",
                   data: {
                     userString: app.globalData.userInfo,
                     openId: e.data

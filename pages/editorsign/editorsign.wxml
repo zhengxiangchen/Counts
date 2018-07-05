@@ -1,0 +1,28 @@
+<i-notice-bar icon="systemprompt" closable>
+    计数：{{counts}}
+</i-notice-bar>
+<block wx:if="{{isHistory}}">
+  <canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="firstCanvas"></canvas>
+</block>
+<block wx:else>
+  <canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="firstCanvas" bindtouchend="touch" 
+  bindtouchmove='move'></canvas>
+</block>
+<view class="page">
+    <view class="page__bd page__bd_spacing">
+        <block wx:if="{{show}}">
+          <slider show-value value="50" bindchange="changeRadius"/>
+        </block>
+        <block wx:if="{{!isHistory}}">
+          <view class="button-sp-area">
+            <button class="weui-btn mini-btn" type="primary" size="mini" bindtap='showRadius'>大小</button>
+            <button class="weui-btn mini-btn" type="default" size="mini" bindtap='back'>回退</button>
+            <i-switch value="{{isEraser}}" size="large" bind:change="changeEraser" slot="footer" class='weui-btn mini-btn'>
+              <view slot="open">橡皮</view>
+              <view slot="close">橡皮</view>
+            </i-switch>
+          </view>
+          <button class="weui-btn" type="primary" plain="true" bindtap='save'>保存</button>
+        </block>
+    </view>
+</view>

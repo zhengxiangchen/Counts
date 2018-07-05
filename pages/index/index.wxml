@@ -1,0 +1,7 @@
+<view class="page">
+  <view class="page__bd page__bd_spacing" style='margin-top:280px;'>
+    <view class="button-sp-area">
+        <button class="weui-btn" type="primary" plain="true" bindtap='toBegin'>图片计数之旅</button>
+    </view>
+  </view>
+</view>

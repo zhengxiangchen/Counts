@@ -1,6 +1,7 @@
 // pages/plateNumber/plateNumber.js
 var app = getApp();
 const { $Message } = require('../../dist/base/index');
+var staticUrl = app.globalData.staticUrl;
 Page({
 
   /**
@@ -87,10 +88,18 @@ Page({
   //点击确定按钮
   sureClick: function(e){
     var that = this;
+    var plateNumber = that.data.plateNumber;
+    if (plateNumber.length <= 0){
+      $Message({
+        content: '批次号为空！',
+        type: 'warning'
+      });
+      return;
+    }
     app.globalData.plateNumber = that.data.plateNumber;
     var openId = wx.getStorageSync('openId');
     wx.request({
-      url: 'http://127.0.0.1:8080/api_v1/mini/plateNumber/checkPlateNumber',
+      url: staticUrl + '/plateNumber/checkPlateNumber',
       data:{
         openId: openId,
         plateNumber: app.globalData.plateNumber
@@ -106,6 +115,12 @@ Page({
             visible: true
           });
         }
+      },
+      fail:function(){
+        wx.showToast({
+          icon:'none',
+          title: '服务器维护中',
+        })
       }
     })
   },
@@ -132,7 +147,7 @@ Page({
       });
 
       wx.request({
-        url: 'http://127.0.0.1:8080/api_v1/mini/plateNumber/deletePlate',
+        url: staticUrl + '/plateNumber/deletePlate',
         data:{
           openId: openId,
           plateNumber: plateNumber
@@ -161,18 +176,6 @@ Page({
           }
         }
       })
-
-      // setTimeout(() => {
-      //   action[1].loading = false;
-      //   this.setData({
-      //     visible: false,
-      //     actions: action
-      //   });
-      //   $Message({
-      //     content: '删除成功！',
-      //     type: 'success'
-      //   });
-      // }, 2000);
     }
   }
 })
