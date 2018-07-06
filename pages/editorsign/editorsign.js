@@ -40,9 +40,12 @@ Page({
 
     var isHistory = wx.getStorageSync("isHistory");
     if (isHistory){
+      context = wx.createCanvasContext('Canvas1')
       that.setData({
         isHistory: isHistory
       })
+    }else{
+      context = wx.createCanvasContext('Canvas2')
     }
 
     var pictureId = options.id;
@@ -57,7 +60,50 @@ Page({
           tempFilePath: img.src,
           img: img
         })
-        that.initialization();
+        console.log(that.data.tempFilePath);
+        wx.getImageInfo({
+          src: that.data.tempFilePath,
+          success: function (res) {
+            console.log("success");
+
+            that.setData({
+              tempFilePath: res.path,
+              befwidth: res.width,
+              befheight: res.height
+            })
+
+            var imageSize = imageUtil.imageUtil(that.data.befwidth, that.data.befheight);
+
+            that.setData({
+              imagewidth: imageSize.imageWidth,
+              imageheight: imageSize.imageHeight
+            })
+
+            //画原始图片
+            context.drawImage(that.data.tempFilePath, 0, 0, that.data.imagewidth, that.data.imageheight);
+            //如果img中含有圆对象,再画圆
+            var img = that.data.img;
+            var list = img.circularList;
+            that.setData({
+              counts: list.length
+            })
+            if (list != undefined && list.length > 0) {
+              context.setStrokeStyle('green');
+              for (var i = 0; i < list.length; i++) {
+                var circular = list[i];
+                that.data.circularList.push(circular);
+                context.beginPath();
+                context.arc(circular.x, circular.y, circular.radius, 0, 2 * Math.PI);
+                context.stroke();
+              }
+            }
+            context.draw();
+          },
+          fail: function () {
+            console.log("失败");
+          }
+        })
+
       }
     })
   },
@@ -101,13 +147,6 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
 
   },
 

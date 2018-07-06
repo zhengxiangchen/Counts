@@ -2,10 +2,10 @@
     计数：{{counts}}
 </i-notice-bar>
 <block wx:if="{{isHistory}}">
-  <canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="firstCanvas"></canvas>
+  <canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="Canvas1"></canvas>
 </block>
 <block wx:else>
-  <canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="firstCanvas" bindtouchend="touch" 
+  <canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="Canvas2" bindtouchend="touch" 
   bindtouchmove='move'></canvas>
 </block>
 <view class="page">

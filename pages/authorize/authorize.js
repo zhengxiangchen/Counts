@@ -60,13 +60,6 @@ Page({
   
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
-  },
-
 
   //弹出提示框--用户点击进行授权
   openAlert: function () {
@@ -104,8 +97,8 @@ Page({
                   }
                 })
 
-                wx.redirectTo({
-                  url: '/pages/plateNumber/plateNumber',
+                wx.switchTab({
+                  url: '/pages/index/index',
                 })
               },
               fail: function(){

@@ -25,6 +25,7 @@ Page({
         plateNumber: plateNumber
       },
       success: function (res) {
+        console.log(res.data);
         that.setData({
           pictures:res.data
         })
@@ -95,7 +96,11 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+    return {
+      imageUrl: '/images/share_pic.png',
+      title: '图片计数小程序',
+      path: '/pages/index/index'
+    }
   },
 
   //点击返回按钮

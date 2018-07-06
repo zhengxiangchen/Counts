@@ -82,7 +82,11 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+    return {
+      imageUrl:'/images/share_pic.png',
+      title: '图片计数小程序',
+      path: '/pages/index/index'
+    }
   },
   chooseImage: function (e) {
     var that = this;
