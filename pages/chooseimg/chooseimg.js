@@ -176,6 +176,7 @@ Page({
           let imgToStr = JSON.stringify(img);
           wx.navigateTo({
             url: '/pages/editorimg/editorimg?imgToStr=' + imgToStr,
+            //url: '/pages/editorPicTest/editorPicTest?imgToStr=' + imgToStr,
           })
         }
         if (res.tapIndex == 1) {

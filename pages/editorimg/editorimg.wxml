@@ -6,7 +6,7 @@ bindtouchmove='move'></canvas>
 <view class="page">
     <view class="page__bd page__bd_spacing">
         <block wx:if="{{show}}">
-          <slider show-value value="50" bindchange="changeRadius"/>
+          <slider show-value value="{{defaultRadius}}" bindchange="changeRadius"/>
         </block>
         <view class="button-sp-area">
           <button class="weui-btn mini-btn" type="primary" size="mini" bindtap='showRadius'>大小</button>

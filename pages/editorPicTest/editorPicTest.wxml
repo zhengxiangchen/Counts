@@ -1,0 +1,44 @@
+<i-notice-bar icon="systemprompt" closable>
+    选取识别区域--默认区域大小为50
+</i-notice-bar>
+
+<block wx:if="{{show}}">
+  <canvas style="width: {{imagewidth}}px; height: {{imageheight}}px;" canvas-id="firstCanvas" bindtouchend="touch" 
+  bindtouchmove='move'></canvas>
+</block>
+
+<block wx:else>
+  <scroll-view scroll-x="true" scroll-y="true" style="height:{{ imageheight }}px;" >
+    <movable-area style="width: {{ imagewidth }}px;height: {{ imageheight }}px;">
+      <movable-view style="width: {{ imagewidth }}px;height: {{ imageheight }}px;" direction="all" bindchange="onChange" bindscale="onScale" scale scale-min="1" scale-max="2" scale-value="1">
+        <image src="{{tempFilePath}}" style="width: {{ imagewidth }}px;height: {{ imageheight }}px;"></image>
+      </movable-view>
+    </movable-area> 
+  </scroll-view>
+</block>
+
+<view class="page">
+    <view class="page__bd page__bd_spacing">
+      <block wx:if="{{show}}">
+        <block wx:if="{{RadiusShow}}">
+          <slider show-value value="{{defaultRadius}}" bindchange="changeRadius"/>
+        </block>
+        <view class="button-sp-area">
+          <button class="weui-btn mini-btn" type="primary" size="mini" bindtap='showRadius'>大小</button>
+          <button class="weui-btn mini-btn" type="default" size="mini" bindtap='back'>回退</button>
+          <i-switch value="{{isEraser}}" size="large" bind:change="changeEraser" slot="footer" class='weui-btn mini-btn'>
+            <view slot="open">橡皮</view>
+            <view slot="close">橡皮</view>
+          </i-switch>
+        </view>
+        <button class="weui-btn" type="primary" plain="true" bindtap='save'>保存</button>
+      </block>
+      <block wx:else>
+        <view class="button-sp-area">
+          <button class="weui-btn mini-btn" type="default" size="mini" bindtap='update'>需要修正</button>
+          <button class="weui-btn mini-btn" type="primary" size="mini" bindtap='saveToServer'>计数正确</button>
+        </view>
+      </block>
+    </view>
+</view>
+

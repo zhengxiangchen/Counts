@@ -8,7 +8,9 @@
     "pages/editorimg/editorimg",
     "pages/countslist/countslist",
     "pages/editorsign/editorsign",
-    "pages/historyList/historyList"
+    "pages/historyList/historyList",
+    "pages/editorPicTest/editorPicTest",
+    "pages/editorsign2/editorsign2"
   ],
   "window":{
     "backgroundTextStyle":"light",

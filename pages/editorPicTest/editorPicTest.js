@@ -1,3 +1,6 @@
+//注意：图片可放大备份文件
+//该页面是从选图片之后点击编辑按钮进入的
+//暂时没有用到
 // pages/editorimg/editorimg.js
 var imageUtil = require('../../utils/util.js');
 var context;
@@ -7,22 +10,31 @@ Page({
    * 页面的初始数据
    */
   data: {
+
     tempFilePath: '',
     befwidth: 0,//原始图片的宽
     befheight: 0,//原始图片的高
     imagewidth: 0,//缩放后的宽  
     imageheight: 0,//缩放后的高
-    defaultRadius:50,//默认半径大小
-    show:false,//是否显示调节大小的控件
-    isEraser:false,//是否启用橡皮擦
-    isMove:false,//手指触摸以后是否移动(移动则不画圈)
+    show:true,
 
-    circularList:[],//所有圆圈的集合
-    circular:{},//圆的对象(圆心X坐标,圆心Y坐标,对应半径)
-    img:{},//存选完区域后整个图片对象(包含属性:src,圆对象的集合)
+    defaultRadius: 50,//默认半径大小
+    RadiusShow: false,//是否显示调节大小的控件
+    isEraser: false,//是否启用橡皮擦
+    isMove: false,//手指触摸以后是否移动(移动则不画圈)
 
-    backActionList:[],//用于记录点击回退按钮后应该执行的操作对象
-    backAction:{},//回退操作对象(包含属性:action[添加0|删除1],圆对象)
+    transList:[],
+    circularList: [],//所有圆圈的集合
+    circular: {},//圆的对象(圆心X坐标,圆心Y坐标,对应半径)
+    img: {},//存选完区域后整个图片对象(包含属性:src,圆对象的集合)
+
+    backActionList: [],//用于记录点击回退按钮后应该执行的操作对象
+    backAction: {},//回退操作对象(包含属性:action[添加0|删除1],圆对象)
+
+    x:0,
+    y:0,
+    scale:1,
+
   },
 
   /**
@@ -35,13 +47,16 @@ Page({
       tempFilePath: img.src,
       img: img
     })
-    
+
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
+    wx.showLoading({
+      title: '图片加载中',
+    })
     var that = this;
     wx.getImageInfo({
       src: that.data.tempFilePath,
@@ -55,8 +70,9 @@ Page({
           imagewidth: imageSize.imageWidth,
           imageheight: imageSize.imageHeight
         })
+
         //画原始图片
-        context = wx.createCanvasContext('firstCanvas')
+        context = wx.createCanvasContext('firstCanvas');
         context.drawImage(that.data.tempFilePath, 0, 0, that.data.imagewidth, that.data.imageheight);
         //如果img中含有圆对象,再画圆
         var img = that.data.img;
@@ -72,37 +88,53 @@ Page({
           }
         }
         context.draw();
+        setTimeout(function () {
+          wx.canvasToTempFilePath({
+            canvasId: 'firstCanvas',
+            success: function (res) {
+              wx.hideLoading();
+              var tempFilePath = res.tempFilePath;
+              that.setData({
+                show: false,
+                tempFilePath: tempFilePath
+              });
+            },
+            fail: function (res) {
+              console.log(res);
+            }
+          });
+        }, 500); 
       }
     })
-  
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    console.log("触底了");
+
   },
 
   /**
@@ -116,39 +148,105 @@ Page({
     }
   },
 
-  //根据传过来的圆的列表画出所有的圆
-  drawCircular:function(list){
+  onChange: function (event){
+    this.setData({
+      x: event.detail.x,
+      y: event.detail.y
+    })
+
+  },
+
+  onScale: function (event){
+    this.setData({
+      x: event.detail.x,
+      y: event.detail.y,
+      scale: event.detail.scale
+    })
+
+  },
+
+  update:function(){
     var that = this;
-    context.clearRect(0, 0, that.data.imagewidth, that.data.imageheight);
+    console.log(that.data.circularList);
+    that.setData({
+      show: true
+    })
+
+    setTimeout(function () {
+      that.draw();
+    }, 500); 
+    
+  },
+
+  draw:function(){
+    var that = this;
+    context = wx.createCanvasContext('firstCanvas');
+
+    context.scale(that.data.scale, that.data.scale);
+
+    var transX = that.data.x / that.data.scale;
+    var transY = that.data.y / that.data.scale;
+    
+    context.translate(transX, transY);
     context.drawImage(that.data.tempFilePath, 0, 0, that.data.imagewidth, that.data.imageheight);
+
+    context.draw();
+
+    that.setData({
+      transList:[],
+      circularList:[]
+    })
+
+  },
+
+  //根据传过来的圆的列表画出所有的圆
+  drawCircular: function (list) {
+    var that = this;
+    context = wx.createCanvasContext('firstCanvas');
+    context.clearRect(0, 0, that.data.imagewidth, that.data.imageheight);
+
+    context.save();
+
+    context.scale(that.data.scale, that.data.scale);
+    
+    var transX = that.data.x / that.data.scale;
+    var transY = that.data.y / that.data.scale;
+    
+    context.translate(transX, transY);
+    context.drawImage(that.data.tempFilePath, 0, 0, that.data.imagewidth, that.data.imageheight);
+
+    context.restore();
+
     context.setStrokeStyle('red');
-    for (var i = 0; i < list.length; i++){
+    for (var i = 0; i < list.length; i++) {
       var circular = list[i];
       context.beginPath();
       context.arc(circular.x, circular.y, circular.radius, 0, 2 * Math.PI);
       context.stroke();
     }
+
     context.draw();
   },
 
+
   //手指触摸后移动
-  move:function(){
+  move: function () {
     this.setData({
-      isMove:true
+      isMove: true
     })
   },
 
+
   //手指触摸动作结束
   touch: function (e) {
-    console.log(e);
     var that = this;
     var isMove = that.data.isMove;
-    if (isMove){
+    if (isMove) {
       that.setData({
-        isMove:false
+        isMove: false
       })
       return;
-    }else{
+    } else {
       var isEraser = that.data.isEraser;
       if (isEraser) {
         //已经启用橡皮擦,点击--去除圆心相近的已有圆
@@ -192,7 +290,6 @@ Page({
         circular.radius = radius;
         //把圆对象放入集合中
         that.data.circularList.push(circular);
-
         that.drawCircular(that.data.circularList);
 
         //记录回退操作
@@ -202,26 +299,26 @@ Page({
         that.data.backActionList.push(backAction);
       }
 
-    }  
+    }
   },
 
   //点击大小按钮,展示滑块控件
-  showRadius:function(){
+  showRadius: function () {
     var that = this;
-    var isShow = that.data.show;
-    if(isShow){
+    var isShow = that.data.RadiusShow;
+    if (isShow) {
       that.setData({
-        show: false
+        RadiusShow: false
       })
-    }else{
+    } else {
       that.setData({
-        show: true
+        RadiusShow: true
       })
     }
   },
 
   //滑动滑块得到当前的半径
-  changeRadius:function(e){
+  changeRadius: function (e) {
     var that = this;
     var newRadius = e.detail.value;
     that.setData({
@@ -240,7 +337,7 @@ Page({
       var action = backAction.action;
       var circular = backAction.circular;
       //如果action为0添加一个圆
-      if (action == 0){
+      if (action == 0) {
         that.data.circularList.push(circular);
       }
       //如果action为1删除一个圆
@@ -250,7 +347,7 @@ Page({
           var circularobj = circularList[i];
           var circularX = circularobj.x;
           var circularY = circularobj.y;
-          if (circular.x == circularX && circular.y == circularY){
+          if (circular.x == circularX && circular.y == circularY) {
             that.data.circularList.splice(i, 1);
           }
         }
@@ -260,35 +357,55 @@ Page({
   },
 
   //点击保存按钮
-  save:function(){
+  save: function () {
     var that = this;
+
+    var list = that.data.circularList;
+
+    var transList = that.data.transList;
+
+    var transX = that.data.x / that.data.scale;
+    var transY = that.data.y / that.data.scale;
+
+    if (list != undefined && list.length > 0) {
+      for (var i = 0; i < list.length; i++) {
+        var circular = list[i];
+        circular.x = circular.x / that.data.scale - transX;
+        circular.y = circular.y / that.data.scale - transY;
+        circular.radius = circular.radius / that.data.scale;
+        transList.push(circular);
+      }
+
+      that.setData({
+        transList: transList
+      })
+    }
+
+
     that.data.img.src = that.data.tempFilePath;
-    that.data.img.circularList = that.data.circularList;
+    that.data.img.circularList = that.data.transList;
 
-    let pages = getCurrentPages();//获取pages（pages就是获取的当前页面的JS里面所有pages的信息）
-    let prevPage = pages[pages.length - 2];//上一页面（prevPage 就是获取的上一个页面的JS里面所有pages的信息）
-    prevPage.setData({
-      img: that.data.img,
-    })
-    wx.navigateBack({
-      delta: 1,
+    var imgToStr = JSON.stringify(that.data.img);
+
+    wx.redirectTo({
+      url: '/pages/editorPicTest/editorPicTest?imgToStr=' + imgToStr,
     })
 
-    
   },
 
   //点击橡皮擦按钮
-  changeEraser:function(){
+  changeEraser: function () {
     var that = this;
     var isEraser = that.data.isEraser;
-    if (isEraser){
+    if (isEraser) {
       that.setData({
-        isEraser:false
+        isEraser: false
       })
-    }else{
+    } else {
       that.setData({
         isEraser: true
       })
     }
   }
+
 })
