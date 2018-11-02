@@ -68,7 +68,7 @@ Page({
       data: {
         id: pictureId
       },
-      success: function (res) {
+      success: function (res) { 
         var img = res.data;
         that.setData({
           tempFilePath: img.src,
@@ -90,7 +90,7 @@ Page({
             })
 
             //画原始图片
-            context.drawImage(that.data.tempFilePath, 0, 0, that.data.imagewidth, that.data.imageheight);
+            context.drawImage(res.path, 0, 0, that.data.imagewidth, that.data.imageheight);
             //如果img中含有圆对象,再画圆
             var img = that.data.img;
             var list = img.circularList;
@@ -112,6 +112,7 @@ Page({
               wx.canvasToTempFilePath({
                 canvasId: 'firstCanvas',
                 success: function (res) {
+                  console.log(res.tempFilePath);
                   wx.hideLoading();
                   var tempFilePath = res.tempFilePath;
                   that.setData({
@@ -123,7 +124,7 @@ Page({
                   console.log(res);
                 }
               });
-            }, 500); 
+            }, 1000); 
           },
           fail: function () {
             console.log("失败");

@@ -30,8 +30,8 @@ App({
   },
 
   globalData: {
-    staticUrl:'http://192.168.1.205:8084/api_v1/mini',
-    //staticUrl:'https://www.gzitrans.cn/api_v1/mini',
+    //staticUrl:'http://192.168.1.205:8084/api_v1/mini',
+    staticUrl:'https://www.gzitrans.cn/api_v1/mini',
     userInfo:null,
     plateNumber:''//批次号或者车牌号
   },
